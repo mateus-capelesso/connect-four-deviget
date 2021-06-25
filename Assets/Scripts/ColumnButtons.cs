@@ -20,12 +20,12 @@ public class ColumnButtons : MonoBehaviour
             var column = Instantiate(columnButton, transform);
             column.GetComponent<ColumnButton>().index = i;
             var button = column.GetComponent<Button>();
-            button.onClick.AddListener(() => ButtonCall(button.GetComponent<ColumnButton>().index));
+            button.onClick.AddListener(() => OnColumnButtonPressed?.Invoke(button.GetComponent<ColumnButton>().index));
         }
     }
 
-    private void ButtonCall(int index)
-    {
-        OnColumnButtonPressed?.Invoke(index);
-    }
+    // private void ButtonCall(int index)
+    // {
+    //     OnColumnButtonPressed?.Invoke(index);
+    // }
 }

@@ -1,12 +1,17 @@
+using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private Slot[,] _gameGrid;
+    public List<SlotContent> players;
     
+    private Slot[,] _gameGrid;
+    private int _activePlayer;
+
     private void Start()
     {
+        _activePlayer = 0;
         AssignEvents();
     }
 
@@ -28,8 +33,17 @@ public class GameManager : MonoBehaviour
             var slot = _gameGrid[i, columnIndex];
             if (slot.SlotContent != SlotContent.Void) continue;
             
-            slot.SlotContent = SlotContent.Red;
+            slot.SlotContent = players[_activePlayer];
             break;
         }
+
+        TogglePlayer();
+    }
+
+    private void TogglePlayer()
+    {
+        _activePlayer++;
+        if (_activePlayer >= players.Count)
+            _activePlayer = 0;
     }
 }
