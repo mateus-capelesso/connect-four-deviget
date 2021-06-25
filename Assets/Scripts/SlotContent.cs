@@ -1,9 +1,6 @@
-﻿namespace DefaultNamespace
+﻿public enum SlotContent
 {
-    public enum SlotContent
-    {
-        Void,
-        Red,
-        Yellow
-    }
+    Void,
+    Red,
+    Yellow
 }
