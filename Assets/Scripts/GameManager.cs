@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     public static Action OnGridFilled;
+    public static Action OnEnableButtons;
+    public static Action OnDisableButton;
     public static Action<List<Slot>> OnWinDetected;
 
     private void Start()
@@ -35,6 +37,11 @@ public class GameManager : MonoBehaviour
 
     private void ColumnSelected(int columnIndex)
     {
+        if (_gameOver) return;
+        
+        // Disable buttons to avoid input errors
+        OnDisableButton?.Invoke();
+
         for (var i = 0; i < GridSlots.Rows; i++)
         {
             var slot = _gameGrid[i, columnIndex];
@@ -43,7 +50,7 @@ public class GameManager : MonoBehaviour
             slot.SlotContent = players[_activePlayer].content;
             break;
         }
-
+        
         CheckWinCondition();
         TogglePlayer();
     }
@@ -60,7 +67,7 @@ public class GameManager : MonoBehaviour
 
         if (list.Count != 0) return list;
         
-        // Whole grid is filled, call UI and game over
+        // Whole grid is filled, call draw UI and game over 
         OnGridFilled?.Invoke();
         return null;
     }
@@ -75,6 +82,8 @@ public class GameManager : MonoBehaviour
 
         if (players[_activePlayer].automaticInput)
             StartCoroutine(PickColumn());
+        else
+            OnEnableButtons?.Invoke();    
     }
 
     private IEnumerator PickColumn()
