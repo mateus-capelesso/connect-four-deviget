@@ -37,4 +37,12 @@ public class GridSlots : MonoBehaviour
         
         OnGridInstantiated?.Invoke(_slotGrid);
     }
+
+    public void Clear()
+    {
+        foreach (var slot in _slotGrid)
+        {
+            slot.Clear();
+        }
+    }
 }

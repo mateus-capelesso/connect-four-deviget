@@ -20,10 +20,7 @@ public class Slot: MonoBehaviour
 
      private void Start()
      {
-          if (_slotContent == SlotContent.Void)
-          {
-               imageFill.color = Color.white;
-          }
+          Clear();
      }
 
      private void ChangeColor()
@@ -37,5 +34,11 @@ public class Slot: MonoBehaviour
                     imageFill.color = Color.yellow;
                     break;
           }
+     }
+
+     public void Clear()
+     {
+          _slotContent = SlotContent.Void;
+          imageFill.color = Color.white;
      }
 }
