@@ -12,6 +12,7 @@ public class GridSlots : MonoBehaviour
     public static Action<Slot[,]> OnGridInstantiated;
 
     private Slot[,] _slotGrid;
+    public Slot[,] SlotGrid => _slotGrid;
 
     private void Start()
     {

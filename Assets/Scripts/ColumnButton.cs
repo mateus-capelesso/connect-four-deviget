@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ColumnButton : MonoBehaviour
@@ -8,7 +7,7 @@ public class ColumnButton : MonoBehaviour
 
     private void Start()
     {
-        GameManager.OnEnableButtons += EnableButton;
+        GameManager.OnPlayerTurn += EnableButton;
         GameManager.OnDisableButton += DisableButtons;
     }
 

@@ -13,14 +13,24 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     public static Action OnGridFilled;
-    public static Action OnEnableButtons;
+    public static Action OnPlayerTurn;
+    public static Action OnPlayerPickColumn;
     public static Action OnDisableButton;
     public static Action<List<Slot>> OnWinDetected;
+    public static Action<Player> OnWinnerDetected;
 
     private void Start()
     {
-        _activePlayer = 0;
         AssignEvents();
+    }
+
+    public void SelectFirstPlayer()
+    {
+        _activePlayer = 0;
+        if(players[_activePlayer].automaticInput)
+            OnPlayerPickColumn?.Invoke();
+        else
+            OnPlayerTurn?.Invoke();
     }
 
     private void AssignEvents()
@@ -41,18 +51,19 @@ public class GameManager : MonoBehaviour
         
         // Disable buttons to avoid input errors
         OnDisableButton?.Invoke();
+        OnPlayerPickColumn?.Invoke();
 
         for (var i = 0; i < GridSlots.Rows; i++)
         {
             var slot = _gameGrid[i, columnIndex];
             if (slot.SlotContent != SlotContent.Void) continue;
-            
-            slot.SlotContent = players[_activePlayer].content;
+
+            slot.SetSlotContent(players[_activePlayer].content, players[_activePlayer].color);
             break;
         }
         
         CheckWinCondition();
-        TogglePlayer();
+        StartCoroutine(TogglePlayer());
     }
 
     public List<int> AvailableColumns()
@@ -72,34 +83,40 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    private void TogglePlayer()
+    private IEnumerator TogglePlayer()
     {
-        if (_gameOver) return;
+        if (_gameOver) yield return null;
+
+        // Delay added to 
+        yield return new WaitForSeconds(0.75f);
         
         _activePlayer++;
         if (_activePlayer >= players.Count)
             _activePlayer = 0;
 
         if (players[_activePlayer].automaticInput)
+        {
             StartCoroutine(PickColumn());
+        }
         else
-            OnEnableButtons?.Invoke();    
+            OnPlayerTurn?.Invoke();    
     }
 
     private IEnumerator PickColumn()
     {
         // Add delay to not feel too automatic
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         var availableColumns = AvailableColumns();
         var index = Random.Range(0, availableColumns.Count);
         ColumnSelected(availableColumns[index]);
     }
 
-    public void GameOver(List<Slot> slots)
+    private void GameOver(List<Slot> slots)
     {
         _gameOver = true;
+        OnWinnerDetected?.Invoke(players[_activePlayer]);
     }
-
+    
     private void CheckWinCondition()
     {
         var list = new List<Slot>();
@@ -131,8 +148,6 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"Win horizontal {_gameGrid[row, column].SlotContent.ToString()}");
                 OnWinDetected?.Invoke(list);
                 return;
-
-
             }
         }
         
@@ -227,7 +242,7 @@ public class GameManager : MonoBehaviour
 
     public void Clear()
     {
-        _activePlayer = 0;
+        SelectFirstPlayer();
         _gameOver = false;
     }
 }
