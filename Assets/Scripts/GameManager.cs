@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        if (_gameGrid.ColumnIsFull(columnIndex)) return;
+
         // Disable buttons to avoid input errors
         OnDisableButton?.Invoke();
         OnAIPickColumn?.Invoke();

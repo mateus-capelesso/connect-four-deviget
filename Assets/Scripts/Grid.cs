@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class Grid
 {
     public Slot[,] Slots;
-    public int Rows;
-    public int Columns;
+    public readonly int Rows;
+    public readonly int Columns;
     private List<Slot> _winnerSlots;
 
     public Grid(int rows, int columns)
@@ -169,18 +166,19 @@ public class Grid
         return list;
     }
 
-    /// <summary>
-    /// Check upper row on every column, to see if one of them is empty
-    /// </summary>
+    public bool ColumnIsFull(int column)
+    {
+        return Slots[Rows - 1, column].SlotContent != SlotContent.Void;
+    }
+    
     public bool IsFull()
     {
-        var rows = Rows - 1;
         for (var i = 0; i < Columns; i++)
         {
-            if (Slots[rows, i].SlotContent == SlotContent.Void)
+            if (!ColumnIsFull(i))
                 return false;
         }
-
+        
         return true;
     }
     
