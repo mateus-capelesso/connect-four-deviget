@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ public class Slot: MonoBehaviour
 {
      private SlotContent _slotContent = SlotContent.Void;
      public Image imageFill;
+     [HideInInspector]
+     public float referenceY;
      
      public SlotContent SlotContent
      {
@@ -18,18 +21,17 @@ public class Slot: MonoBehaviour
           }
      }
 
-     public void SetSlotContent(SlotContent content, Color color)
+     public void SetSlotContent(Player player, Action callback)
      {
-          SlotContent = content;
+          SlotContent = player.content;
 
-          var position = transform.position;
-          var dif = 470 - position.y;
-          transform.position = new Vector3(position.x, position.y + dif, position.z);
-          transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+          var position = GetComponent<RectTransform>().anchoredPosition;
+          GetComponent<RectTransform>().anchoredPosition = new Vector2(position.x, referenceY);
+          GetComponent<RectTransform>().DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
           {
-               transform.DOMove(position, 0.5f).SetEase(Ease.InExpo);
+               GetComponent<RectTransform>().DOAnchorPosY(position.y, 0.5f).SetEase(Ease.InExpo).OnComplete(() => callback?.Invoke());
           });
-          ChangeColor(color);
+          ChangeColor(player.color);
      }
 
      private void Start()

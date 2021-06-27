@@ -9,21 +9,16 @@ public class GridSlots : MonoBehaviour
 
     public GameObject slotPrefab;
     public Transform slotHolders;
-    public static Action<Slot[,]> OnGridInstantiated;
+    public static Action<Grid> OnGridInstantiated;
+    public RectTransform slotAnimationReference;
 
-    private Slot[,] _slotGrid;
-    public Slot[,] SlotGrid => _slotGrid;
-
-    private void Start()
-    {
-        InstantiateGrid();
-    }
-
+    private Grid _grid;
+    public Slot[,] SlotGrid => _grid.Slots;
+    
     public void InstantiateGrid()
     {
-        // Create 2D array and clear it
-        _slotGrid = new Slot[Rows, Columns];
-        Array.Clear(_slotGrid, 0, _slotGrid.Length);
+        _grid = new Grid(Rows, Columns);
+        var grid = new Slot[Rows, Columns];
         
         for (var i = 0; i < Rows; i++)
         {
@@ -32,18 +27,22 @@ public class GridSlots : MonoBehaviour
                 var slotObject = Instantiate(slotPrefab, slotHolders);
                 var slot = slotObject.GetComponent<Slot>();
                 slot.SlotContent = SlotContent.Void;
-                _slotGrid[i, j] = slot;
+                slot.referenceY = slotAnimationReference.anchoredPosition.y;
+                grid[i, j] = slot;
             }
         }
-        
-        OnGridInstantiated?.Invoke(_slotGrid);
+
+        _grid.Slots = grid;
+        OnGridInstantiated?.Invoke(_grid);
     }
 
     public void Clear()
     {
-        foreach (var slot in _slotGrid)
+        foreach (var slot in _grid.Slots)
         {
-            slot.Clear();
+            Destroy(slot.gameObject);
         }
+        
+        InstantiateGrid();
     }
 }

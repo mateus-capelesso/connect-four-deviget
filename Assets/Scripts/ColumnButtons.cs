@@ -23,9 +23,4 @@ public class ColumnButtons : MonoBehaviour
             button.onClick.AddListener(() => OnColumnButtonPressed?.Invoke(button.GetComponent<ColumnButton>().index));
         }
     }
-
-    // private void ButtonCall(int index)
-    // {
-    //     OnColumnButtonPressed?.Invoke(index);
-    // }
 }

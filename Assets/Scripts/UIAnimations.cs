@@ -19,7 +19,7 @@ public class UIAnimations : MonoBehaviour
     {
         GameManager.OnWinnerDetected += SetWinText;
         GameManager.OnPlayerTurn += InstructionText;
-        GameManager.OnPlayerPickColumn += HideText;
+        GameManager.OnAIPickColumn += HideText;
         GameManager.OnGridFilled += DrawText;
     }
 
@@ -52,25 +52,25 @@ public class UIAnimations : MonoBehaviour
 
     #endregion
 
-    private void SetWinText(Player player)
+    public void SetWinText(Player player)
     {
         instructionsText.text = $"Player {player.content.ToString()} won";
         instructionsText.color = player.color;
     }
 
-    private void InstructionText()
+    public void InstructionText()
     {
         instructionsText.DOFade(1f, 0.5f);
         instructionsText.color = textColor;
         instructionsText.text = $"Pick a column";
     }
 
-    private void HideText()
+    public void HideText()
     {
         instructionsText.DOFade(0f, 0.2f);
     }
 
-    private void DrawText()
+    public void DrawText()
     {
         instructionsText.DOFade(1f, 0.5f);
         instructionsText.color = textColor;
