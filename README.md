@@ -8,3 +8,5 @@ Some UI Buttons detect the input in front of each column, so I didn't need to ma
 To improve the AI, I took a look at some minimax examples, but it would take a lot of time to implement it and test it, so I decided to take a straightforward path. I implemented an algorithm that tries to find a list of optimum options to place a piece. To get it, I look for the items of the same player and check their surroundings. If some of its surroundings are empty, I consider this an optimum column. Then, the algorithm picks some random elements from this list and places them on the grid.
 
 The animations were created with DoTween.This plugin made my life easier when I had to animate some UI elements.
+
+If I would sum all the time spent on this project, it would give something around 5 hours, excluding the intermissions.
